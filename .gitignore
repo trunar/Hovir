@@ -1,0 +1,28 @@
+# Python bytecode and local environments
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Meson and GNOME build output
+/build/
+/_build/
+/_flatpak_build/
+/meson-private/
+/meson-logs/
+/compile_commands.json
+*.gresource
+*.gmo
+*.mo
+gschemas.compiled
+
+# Flatpak Builder output and local installations
+/.flatpak-builder/
+/.flatpak/
+/build-dir/
+/repo/
+
+# Editor and operating system files
+*~
+.DS_Store

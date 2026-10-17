@@ -30,6 +30,10 @@ hovir_sources = [
   '__init__.py',
   'main.py',
   'window.py',
+  'settings.py',
+  'voices.py',
+  'engines.py',
+  'audio.py',
 ]
 
 install_data(hovir_sources, install_dir: moduledir)

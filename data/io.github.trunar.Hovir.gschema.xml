@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist gettext-domain="hovir">
 	<schema id="io.github.trunar.Hovir" path="/io/github/trunar/Hovir/">
+		<key name="engine" type="s">
+			<default>'piper'</default>
+			<summary>Selected speech engine</summary>
+		</key>
+		<key name="language" type="s">
+			<default>'en'</default>
+			<summary>Selected voice language</summary>
+		</key>
+		<key name="voice" type="s">
+			<default>''</default>
+			<summary>Selected voice</summary>
+		</key>
+		<key name="hear-myself" type="b">
+			<default>false</default>
+			<summary>Also play speech on the default audio output</summary>
+		</key>
+		<key name="additional-devices" type="as">
+			<default>[]</default>
+			<summary>Additional audio output device names</summary>
+		</key>
 	</schema>
 </schemalist>

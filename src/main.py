@@ -38,7 +38,9 @@ class HovirApplication(Adw.Application):
                          resource_base_path='/io/github/trunar/Hovir')
         self.create_action('quit', lambda *_: self.quit(), ['<control>q'])
         self.create_action('about', self.on_about_action)
-        self.create_action('preferences', self.on_preferences_action)
+        self.create_action('shortcuts', self.on_shortcuts_action, ['<control>question'])
+        self.create_action('remove-audio-sink', self.on_remove_audio_sink_action)
+        self.create_action('manage-voices', self.on_manage_voices_action)
 
     def do_activate(self):
         """Called when the application is activated.
@@ -55,17 +57,28 @@ class HovirApplication(Adw.Application):
         """Callback for the app.about action."""
         about = Adw.AboutDialog(application_name='Hovir',
                                 application_icon='io.github.trunar.Hovir',
-                                developer_name='Unknown',
+                                developer_name='Trunar',
                                 version='0.1.0',
                                 # Translators: Replace "translator-credits" with your name/username, and optionally an email or URL.
                                 translator_credits = _('translator-credits'),
-                                developers=['Unknown'],
-                                copyright='© 2026 Unknown')
+                                developers=['Trunar'],
+                                copyright='© 2026 Trunar')
         about.present(self.props.active_window)
 
-    def on_preferences_action(self, widget, _):
-        """Callback for the app.preferences action."""
-        print('app.preferences action activated')
+    def on_shortcuts_action(self, *_args):
+        builder = Gtk.Builder.new_from_resource('/io/github/trunar/Hovir/shortcuts-dialog.ui')
+        dialog = builder.get_object('shortcuts_dialog')
+        dialog.present(self.props.active_window)
+
+    def on_remove_audio_sink_action(self, *_args):
+        window = self.props.active_window
+        if window:
+            window.request_remove_sink()
+
+    def on_manage_voices_action(self, *_args):
+        window = self.props.active_window
+        if window:
+            window.open_voice_manager()
 
     def create_action(self, name, callback, shortcuts=None):
         """Add an application action.

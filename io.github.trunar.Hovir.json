@@ -8,8 +8,9 @@
         "--share=network",
         "--share=ipc",
         "--socket=fallback-x11",
+        "--socket=wayland",
         "--device=dri",
-        "--socket=wayland"
+        "--socket=pulseaudio"
     ],
     "cleanup" : [
         "/include",
@@ -24,13 +25,26 @@
     ],
     "modules" : [
         {
+            "name" : "python-dependencies",
+            "buildsystem" : "simple",
+            "build-options" : {
+                "build-args" : [ "--share=network" ]
+            },
+            "build-commands" : [
+                "python3 -m pip install --disable-pip-version-check --no-warn-script-location --no-compile --prefix=/app -r requirements-flatpak.txt"
+            ],
+            "sources" : [
+                { "type" : "dir", "path" : "." }
+            ]
+        },
+        {
             "name" : "hovir",
             "builddir" : true,
             "buildsystem" : "meson",
             "sources" : [
                 {
-                    "type" : "git",
-                    "url" : "file:///home/user/Projects"
+                    "type" : "dir",
+                    "path" : "."
                 }
             ]
         }

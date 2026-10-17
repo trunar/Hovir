@@ -4,9 +4,11 @@
   <requires lib="Adw" version="1.0"/>
   <template class="HovirWindow" parent="AdwApplicationWindow">
     <property name="title" translatable="yes">Hovir</property>
-    <property name="default-width">800</property>
-    <property name="default-height">600</property>
+    <property name="default-width">470</property>
+    <property name="default-height">620</property>
     <property name="content">
+      <object class="GtkOverlay" id="window_overlay">
+       <child>
       <object class="AdwToolbarView">
         <child type="top">
           <object class="AdwHeaderBar">
@@ -21,30 +23,149 @@
           </object>
         </child>
         <property name="content">
-          <object class="GtkLabel" id="label">
-            <property name="label" translatable="yes">Hello, World!</property>
-            <style>
-              <class name="title-1"/>
-            </style>
+          <object class="GtkScrolledWindow">
+            <property name="hscrollbar-policy">never</property>
+            <property name="vexpand">True</property>
+            <property name="child">
+              <object class="AdwClamp">
+                <property name="maximum-size">600</property>
+                <property name="margin-top">18</property>
+                <property name="margin-bottom">18</property>
+                <property name="margin-start">18</property>
+                <property name="margin-end">18</property>
+                <property name="child">
+                  <object class="GtkBox">
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">16</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label" translatable="yes">Speech always goes to the Hovir virtual audio sink.</property>
+                        <property name="xalign">0.5</property>
+                        <property name="justify">center</property>
+                        <property name="wrap">True</property>
+                        <style><class name="dim-label"/></style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="AdwPreferencesGroup">
+                        <child>
+                          <object class="AdwComboRow" id="engine_dropdown">
+                            <property name="title" translatable="yes">Engine</property>
+                            <property name="subtitle" translatable="yes">Speech synthesis engine</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="AdwComboRow" id="language_dropdown">
+                            <property name="title" translatable="yes">Language</property>
+                            <property name="subtitle" translatable="yes">Language of the selected voice</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="AdwComboRow" id="voice_dropdown">
+                            <property name="title" translatable="yes">Voice</property>
+                            <property name="subtitle" translatable="yes">Voice used to speak your text</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="AdwSwitchRow" id="hear_switch">
+                            <property name="title" translatable="yes">Hear myself</property>
+                            <property name="subtitle" translatable="yes">Also play through the default output</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="AdwComboRow" id="devices_dropdown">
+                            <property name="title" translatable="yes">Additional output</property>
+                            <property name="subtitle" translatable="yes">Optional output device</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkScrolledWindow" id="text_scroller">
+                        <property name="min-content-height">108</property>
+                        <property name="max-content-height">108</property>
+                        <property name="propagate-natural-height">True</property>
+                        <property name="vexpand">False</property>
+                        <property name="overflow">hidden</property>
+                        <property name="child">
+                          <object class="GtkOverlay">
+                            <child>
+                              <object class="GtkTextView" id="text_view">
+                                <property name="wrap-mode">word-char</property>
+                                <property name="top-margin">10</property>
+                                <property name="bottom-margin">10</property>
+                                <property name="left-margin">10</property>
+                                <property name="right-margin">10</property>
+                                <property name="buffer"><object class="GtkTextBuffer" id="text_buffer"/></property>
+                              </object>
+                            </child>
+                            <child type="overlay">
+                              <object class="GtkLabel" id="text_placeholder">
+                                <property name="label" translatable="yes">Type or paste text here…</property>
+                                <property name="halign">start</property>
+                                <property name="valign">start</property>
+                                <property name="margin-start">12</property>
+                                <property name="margin-top">12</property>
+                                <property name="can-target">False</property>
+                                <style><class name="dim-label"/></style>
+                              </object>
+                            </child>
+                            <style><class name="card"/></style>
+                          </object>
+                        </property>
+                        <style><class name="card"/></style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkCenterBox" id="speak_area">
+                        <property name="hexpand">True</property>
+                        <property name="center-widget">
+                          <object class="GtkButton" id="speak_button">
+                            <property name="halign">center</property>
+                            <property name="label" translatable="yes">Speak</property>
+                            <property name="tooltip-text" translatable="yes">Speak text (Enter)</property>
+                            <style>
+                              <class name="suggested-action"/>
+                              <class name="pill"/>
+                            </style>
+                          </object>
+                        </property>
+                        <property name="end-widget">
+                          <object class="GtkLabel" id="voice_size_label">
+                            <property name="halign">start</property>
+                            <property name="valign">center</property>
+                            <property name="margin-start">8</property>
+                            <style><class name="dim-label"/><class name="caption"/></style>
+                          </object>
+                        </property>
+                      </object>
+                    </child>
+                  </object>
+                </property>
+              </object>
+            </property>
           </object>
         </property>
+      </object>
+       </child>
+       <child type="overlay">
+        <object class="GtkProgressBar" id="progress_bar">
+          <property name="halign">fill</property>
+          <property name="valign">end</property>
+          <property name="height-request">3</property>
+          <property name="opacity">0</property>
+          <property name="can-target">False</property>
+        </object>
+       </child>
       </object>
     </property>
   </template>
   <menu id="primary_menu">
     <section>
-      <item>
-        <attribute name="label" translatable="yes">_Preferences</attribute>
-        <attribute name="action">app.preferences</attribute>
-      </item>
-      <item>
-        <attribute name="label" translatable="yes">_Keyboard Shortcuts</attribute>
-        <attribute name="action">app.shortcuts</attribute>
-      </item>
-      <item>
-        <attribute name="label" translatable="yes">_About Hovir</attribute>
-        <attribute name="action">app.about</attribute>
-      </item>
+      <item><attribute name="label" translatable="yes">_Keyboard Shortcuts</attribute><attribute name="action">app.shortcuts</attribute></item>
+      <item><attribute name="label" translatable="yes">Manage Downloaded Voices</attribute><attribute name="action">app.manage-voices</attribute></item>
+      <item><attribute name="label" translatable="yes">Remove Hovir virtual audio sink</attribute><attribute name="action">app.remove-audio-sink</attribute></item>
+      <item><attribute name="label" translatable="yes">_About Hovir</attribute><attribute name="action">app.about</attribute></item>
     </section>
   </menu>
 </interface>

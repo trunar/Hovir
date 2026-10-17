@@ -5,6 +5,6 @@ Icon=io.github.trunar.Hovir
 Terminal=false
 Type=Application
 Categories=Utility;
-Keywords=GTK;
+Keywords=Text;Speech;Piper;Microphone;TTS;
 StartupNotify=true
 DBusActivatable=true
