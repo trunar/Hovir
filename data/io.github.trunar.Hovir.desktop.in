@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Hovir
+Exec=hovir
+Icon=io.github.trunar.Hovir
+Terminal=false
+Type=Application
+Categories=Utility;
+Keywords=GTK;
+StartupNotify=true
+DBusActivatable=true
