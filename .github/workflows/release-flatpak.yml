@@ -1,0 +1,51 @@
+name: Build Flatpak release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-flatpak:
+    name: Build x86_64 Flatpak bundle
+    permissions:
+      actions: write
+      contents: read
+    runs-on: ubuntu-24.04
+    container:
+      image: ghcr.io/flathub-infra/flatpak-github-actions:gnome-50
+      options: --privileged
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      - name: Build Flatpak bundle
+        uses: flatpak/flatpak-github-actions/flatpak-builder@v6
+        with:
+          manifest-path: io.github.trunar.Hovir.json
+          bundle: Hovir-${{ github.ref_name }}-x86_64.flatpak
+          artifact-name: hovir-${{ github.ref_name }}-x86_64
+          cache-key: flatpak-builder-${{ github.sha }}
+
+  publish-release:
+    name: Attach bundle to GitHub Release
+    runs-on: ubuntu-24.04
+    needs: build-flatpak
+    permissions:
+      actions: read
+      contents: write
+    steps:
+      - name: Download Flatpak bundle
+        uses: actions/download-artifact@v8
+        with:
+          name: hovir-${{ github.ref_name }}-x86_64
+          path: dist
+
+      - name: Create release and upload bundle
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if ! gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            gh release create "$GITHUB_REF_NAME" --generate-notes
+          fi
+          gh release upload "$GITHUB_REF_NAME" dist/*.flatpak --clobber
