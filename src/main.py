@@ -1,6 +1,6 @@
 # main.py
 #
-# Copyright 2026 Unknown
+# Copyright 2026 Andrii Indyk
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+import platform
 import sys
 import gi
 
@@ -25,17 +26,18 @@ from gettext import gettext as _
 gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
 
-from gi.repository import Gtk, Gio, Adw
+from gi.repository import Gtk, Gio, Adw, GLib
 from .window import HovirWindow
 
 
 class HovirApplication(Adw.Application):
     """The main application singleton class."""
 
-    def __init__(self):
+    def __init__(self, version):
         super().__init__(application_id='io.github.trunar.Hovir',
                          flags=Gio.ApplicationFlags.DEFAULT_FLAGS,
                          resource_base_path='/io/github/trunar/Hovir')
+        self.version = version
         self.create_action('quit', lambda *_: self.quit(), ['<control>q'])
         self.create_action('about', self.on_about_action)
         self.create_action('shortcuts', self.on_shortcuts_action, ['<control>question'])
@@ -55,14 +57,46 @@ class HovirApplication(Adw.Application):
 
     def on_about_action(self, *args):
         """Callback for the app.about action."""
+        os_name = GLib.get_os_info('PRETTY_NAME') or platform.platform()
         about = Adw.AboutDialog(application_name='Hovir',
                                 application_icon='io.github.trunar.Hovir',
-                                developer_name='Trunar',
-                                version='0.1.0',
-                                # Translators: Replace "translator-credits" with your name/username, and optionally an email or URL.
-                                translator_credits = _('translator-credits'),
-                                developers=['Trunar'],
-                                copyright='© 2026 Trunar')
+                                developer_name='Andrii Indyk',
+                                version=self.version,
+                                developers=['Andrii Indyk'],
+                                copyright='© 2026 Andrii Indyk',
+                                website='https://github.com/trunar/Hovir',
+                                issue_url='https://github.com/trunar/Hovir/issues',
+                                license_type=Gtk.License.CUSTOM,
+                                license=(
+                                    'This application is licensed under the GNU General Public '
+                                    'License, version 3 or later. See COPYING for details.\n\n'
+                                    'This application comes with absolutely no warranty.'
+                                ),
+                                debug_info=(
+                                    f'Hovir {self.version}\n'
+                                    f'Operating system: {os_name}\n'
+                                    f'Architecture: {platform.machine()}\n'
+                                    f'Python: {platform.python_version()}\n'
+                                    f'GTK: {Gtk.get_major_version()}.{Gtk.get_minor_version()}'
+                                ),
+                                debug_info_filename='hovir-debug-info.txt')
+        about.add_legal_section(
+            _('Piper speech engine'),
+            '© Open Home Foundation',
+            Gtk.License.GPL_3_0,
+            'Piper is distributed under GPL-3.0-or-later.',
+        )
+        about.add_legal_section(
+            _('Piper voice catalog'),
+            None,
+            Gtk.License.MIT_X11,
+            'The rhasspy/piper-voices repository is licensed under the MIT License.',
+        )
+        about.add_link(_('Piper project'), 'https://github.com/OHF-Voice/piper1-gpl')
+        about.add_link(
+            _('Piper voice catalog'),
+            'https://huggingface.co/rhasspy/piper-voices',
+        )
         about.present(self.props.active_window)
 
     def on_shortcuts_action(self, *_args):
@@ -98,5 +132,5 @@ class HovirApplication(Adw.Application):
 
 def main(version):
     """The application's entry point."""
-    app = HovirApplication()
+    app = HovirApplication(version)
     return app.run(sys.argv)

@@ -9,7 +9,7 @@
     <p>Type text and speak it through a persistent virtual microphone or your selected audio outputs. Download Piper voices on demand from the community voice catalog.</p>
   </description>
   <developer id="io.github.trunar">
-    <name>Trunar</name>
+    <name>Andrii Indyk</name>
   </developer>
   <url type="homepage">https://github.com/trunar/Hovir</url>
   <url type="vcs-browser">https://github.com/trunar/Hovir</url>
